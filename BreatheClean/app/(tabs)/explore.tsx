@@ -174,25 +174,33 @@ export default function JournalingScreen() {
           </Collapsible>
           
           <ThemedView style={styles.shareContainer}>
-            <CheckBox
-              checked={currentEntry.shared || false}
-              onToggle={(checked) => setCurrentEntry({...currentEntry, shared: checked})}
-              label="Share with my support partners"
-            />
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <CheckBox
+                checked={currentEntry.shared || false}
+                onToggle={(checked) => setCurrentEntry({...currentEntry, shared: checked})}
+              />
+              <ThemedText style={{ marginLeft: 8 }}>Share with my support partners</ThemedText>
+            </View>
           </ThemedView>
           
           <Button 
-            style={styles.saveButton} 
-            onPress={saveJournalEntry}
-            disabled={!currentEntry.mood || !currentEntry.difficultyLevel}>
-            Save Journal Entry
-          </Button>
+            style={[
+              styles.saveButton, 
+              (!currentEntry.mood || !currentEntry.difficultyLevel) && styles.disabledButton
+            ]}
+            onPress={() => {
+              if (currentEntry.mood && currentEntry.difficultyLevel) {
+                saveJournalEntry();
+              }
+            }}
+            label="Save Journal Entry"
+          />
         </>
       )}
       
       {section === 'pastEntries' && (
         <>
-          <ThemedText type="sectionTitle">Past Journal Entries</ThemedText>
+          <ThemedText type="title">Past Journal Entries</ThemedText>
           
           {pastEntries.length === 0 ? (
             <ThemedView style={styles.emptyState}>
@@ -231,61 +239,6 @@ export default function JournalingScreen() {
         </>
       )}
       
-      {section === 'partners' && (
-        <>
-          <ThemedText type="sectionTitle">Support Partners</ThemedText>
-          
-          {!showInviteForm ? (
-            <Button 
-              style={styles.inviteButton}
-              onPress={() => setShowInviteForm(true)}>
-              Invite New Partner
-            </Button>
-          ) : (
-            <ThemedView style={styles.inviteForm}>
-              <ThemedText style={styles.formLabel}>Partner's Name:</ThemedText>
-              <TextInput
-                style={styles.textInput}
-                value={inviteData.name}
-                onChangeText={(text) => setInviteData({...inviteData, name: text})}
-                placeholder="Enter name"
-                placeholderTextColor="#888"
-              />
-              
-              <ThemedText style={styles.formLabel}>Partner's Email:</ThemedText>
-              <TextInput
-                style={styles.textInput}
-                value={inviteData.email}
-                onChangeText={(text) => setInviteData({...inviteData, email: text})}
-                placeholder="Enter email address"
-                placeholderTextColor="#888"
-                keyboardType="email-address"
-              />
-              
-              <ThemedView style={styles.inviteActions}>
-                <Button 
-                  style={styles.cancelButton}
-                  variant="secondary"
-                  onPress={() => setShowInviteForm(false)}>
-                  Cancel
-                </Button>
-                <Button 
-                  style={styles.sendButton}
-                  onPress={sendInvitation}
-                  disabled={!inviteData.name || !inviteData.email}>
-                  Send Invitation
-                </Button>
-              </ThemedView>
-            </ThemedView>
-          )}
-          
-          <ThemedView style={styles.partnersList}>
-            <ThemedText style={styles.emptyStateText}>
-              Your support partners will appear here
-            </ThemedText>
-          </ThemedView>
-        </>
-      )}
     </ParallaxScrollView>
   );
 }
@@ -428,8 +381,12 @@ const styles = StyleSheet.create({
   inviteButton: {
     marginBottom: 20,
   },
-  inviteForm: {
-    padding: 15,
-    backgroundColor: '#F8F9FA',
-    borderRadius:8}
-  }
+    inviteForm: {
+      padding: 15,
+      backgroundColor: '#F8F9FA',
+      borderRadius: 8
+    },
+    disabledButton: {
+      backgroundColor: '#DDD'
+    }
+  })
