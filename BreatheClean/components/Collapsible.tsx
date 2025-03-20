@@ -39,11 +39,19 @@ const Collapsible: React.FC<CollapsibleProps> = ({ title, initiallyExpanded = fa
 };
 const styles = StyleSheet.create({
   heading: {
+    backgroundColor: '#rgba(255, 255, 255, 0.05)',
+    borderColor: '#rgba(255, 255, 255, 0.2)',
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 8,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    marginBottom: 4,
   },
+
   content: {
+    borderRadius: 20,
     marginTop: 6,
     marginLeft: 24,
   },
